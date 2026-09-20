@@ -1,7 +1,16 @@
 import { hubSpotClient } from '../../clients/hubspot.client.js';
-import { CreateTicketInput } from './ticket.schema.js';
+import { CreateTicketInput } from './ticket.schemas.js';
 
 export const createTicket = async (input: CreateTicketInput) => {
+    const existingTicket =
+        await hubSpotClient.getTicketByExternalId(
+            input.externalTicketId,
+        );
+
+    if (existingTicket.total > 0) {
+        return existingTicket.results[0];
+    }
+
     const ticket = await hubSpotClient.createTicket({
         subject: input.subject,
         content: input.description,
@@ -10,7 +19,8 @@ export const createTicket = async (input: CreateTicketInput) => {
         hs_pipeline_stage: '1',
         carrier: input.carrier,
         issue_category: input.issueCategory,
-        external_system: 'Minha Plataforma',
+        external_system: 'Minha Rota',
+        external_ticket_id: input.externalTicketId,
     });
 
     return ticket;

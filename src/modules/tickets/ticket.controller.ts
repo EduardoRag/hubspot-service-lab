@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
-import { createTicketSchema } from './ticket.schema.js';
+import { createTicketSchema } from './ticket.schemas.js';
 import { createTicket, getTicket } from './ticket.service.js';
 
 export const ticketController = async (app: FastifyInstance) => {
