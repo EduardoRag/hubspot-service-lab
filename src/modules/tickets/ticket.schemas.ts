@@ -26,4 +26,21 @@ export const createTicketSchema = z.object({
     priority: z.enum(['LOW', 'MEDIUM', 'HIGH']),
 });
 
+export const updateTicketSchema = z
+    .object({
+        subject: z.string().min(1).optional(),
+        description: z.string().min(1).optional(),
+        priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional(),
+        carrier: z.enum(carriers).optional(),
+        issueCategory: z.enum(issueCategories).optional(),
+    })
+    .refine(
+        (data) => Object.keys(data).length > 0,
+        {
+            message:
+                'At least one field must be provided',
+        },
+    );
+
 export type CreateTicketInput = z.infer<typeof createTicketSchema>;
+export type UpdateTicketInput = z.infer<typeof updateTicketSchema>;

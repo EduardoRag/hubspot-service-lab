@@ -1,6 +1,6 @@
 import { hubSpotClient } from '../../clients/hubspot.client.js';
 import { HubSpotApiError } from '../../errors/hubspot-api.error.js';
-import type { CreateTicketInput } from './ticket.schemas.js';
+import type { CreateTicketInput, UpdateTicketInput } from './ticket.schemas.js';
 
 export const createTicket = async (input: CreateTicketInput) => {
     const existingTicket =
@@ -47,4 +47,26 @@ export const createTicket = async (input: CreateTicketInput) => {
 
 export const getTicket = async (id: string) => {
     return hubSpotClient.getTicket(id);
+};
+
+export const updateTicket = async (
+    id: string,
+    input: UpdateTicketInput,
+) => {
+    const properties: Record<string, string> = {};
+
+    if (input.subject !== undefined) properties.subject = input.subject;
+
+    if (input.description !== undefined) properties.content = input.description;
+
+    if (input.priority !== undefined) properties.hs_ticket_priority = input.priority;
+
+    if (input.carrier !== undefined) properties.carrier = input.carrier;
+
+    if (input.issueCategory !== undefined) properties.issue_category = input.issueCategory;
+
+    return hubSpotClient.updateTicket(
+        id,
+        properties,
+    );
 };
