@@ -6,7 +6,11 @@ export const createTicket = async (input: CreateTicketInput) => {
         subject: input.subject,
         content: input.description,
         hs_ticket_priority: input.priority,
+        hs_pipeline: '0',
+        hs_pipeline_stage: '1',
         carrier: input.carrier,
+        issue_category: input.issueCategory,
+        external_system: 'Minha Plataforma',
     });
 
     return ticket;
