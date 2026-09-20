@@ -33,6 +33,18 @@ export const updateTicketSchema = z
         priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional(),
         carrier: z.enum(carriers).optional(),
         issueCategory: z.enum(issueCategories).optional(),
+        status: z.enum([
+            'NEW',
+            'RESOLVED',
+        ]).optional(),
+        resolutionReason: z.enum([
+            'Problema resolvido',
+            'Reembolso solicitado',
+            'Reenvio solicitado',
+            'Correção de endereço',
+            'Problema com a transportadora',
+            'Outro',
+        ]).optional(),
     })
     .refine(
         (data) => Object.keys(data).length > 0,
@@ -40,7 +52,17 @@ export const updateTicketSchema = z
             message:
                 'At least one field must be provided',
         },
-    );
+    )
+    .refine(
+        (data) =>
+            data.status !== 'RESOLVED' ||
+            data.resolutionReason !== undefined,
+        {
+            message:
+                'resolutionReason is required when status is RESOLVED',
+            path: ['resolutionReason'],
+        },
+    )
 
 export type CreateTicketInput = z.infer<typeof createTicketSchema>;
 export type UpdateTicketInput = z.infer<typeof updateTicketSchema>;

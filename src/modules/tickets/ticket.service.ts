@@ -65,6 +65,19 @@ export const updateTicket = async (
 
     if (input.issueCategory !== undefined) properties.issue_category = input.issueCategory;
 
+    if (input.resolutionReason !== undefined) {
+        properties.motivo_da_resolucao = input.resolutionReason;
+    }
+
+    if (input.status !== undefined) {
+        const pipelineStages = {
+            NEW: '1',
+            RESOLVED: '1440293259',
+        } as const;
+
+        properties.hs_pipeline_stage = pipelineStages[input.status];
+    }
+
     return hubSpotClient.updateTicket(
         id,
         properties,
